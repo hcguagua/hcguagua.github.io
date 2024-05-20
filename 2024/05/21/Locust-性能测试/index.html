@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://example.com/imgs/image.png">
 <meta property="og:image" content="http://example.com/imgs/image-1716222963213.png">
 <meta property="article:published_time" content="2024-05-20T16:35:46.000Z">
-<meta property="article:modified_time" content="2024-05-20T16:52:11.516Z">
+<meta property="article:modified_time" content="2024-05-20T16:56:32.947Z">
 <meta property="article:author" content="hcguagua">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/imgs/image.png">
@@ -343,51 +343,13 @@
 </ol>
 <h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a><strong>基本使用</strong></h3><ol>
 <li><p>安装：直接 pip 安装就行</p>
-<ol>
-<li><pre><code class="hljs">pip3 install locust
-
-# 查看版本
-locust -V
-
-# 输出类似下面的内容就代表安装成功了！！！
-locust 2.27.0 from /usr/local/lib/python3.10/site-packages/locust (python 3.10.6)
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><br>   <br><br><span class="hljs-number">2.</span> 案例模版（需要新建 名为 locustfile.py  的文件）<br><br>   <span class="hljs-number">1.</span> ```python<br>      <span class="hljs-keyword">from</span> locust <span class="hljs-keyword">import</span> HttpUser, task, between<br>      <br>      <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorldUser</span>(<span class="hljs-title class_ inherited__">HttpUser</span>):<br>          host = <span class="hljs-string">&#x27;http://120.46.177.228&#x27;</span><br>          wait_time = between(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>      <br><span class="hljs-meta">          @task</span><br>          <span class="hljs-keyword">def</span> <span class="hljs-title function_">webhook</span>(<span class="hljs-params">self</span>):<br>              self.client.post(<span class="hljs-string">&#x27;/webhook1&#x27;</span>)<br></code></pre></td></tr></table></figure>
-</code></pre>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">pip3</span> install locust<br><br><span class="hljs-comment"># 查看版本</span><br><span class="hljs-attribute">locust</span> -V<br><br><span class="hljs-comment"># 输出类似下面的内容就代表安装成功了！！！</span><br><span class="hljs-attribute">locust</span> <span class="hljs-number">2</span>.<span class="hljs-number">27</span>.<span class="hljs-number">0</span> from /usr/local/lib/python3.<span class="hljs-number">10</span>/site-packages/locust (python <span class="hljs-number">3</span>.<span class="hljs-number">10</span>.<span class="hljs-number">6</span>)<br></code></pre></td></tr></table></figure>
 </li>
-</ol>
+<li><p>案例模版（需要新建 名为 locustfile.py  的文件）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> locust <span class="hljs-keyword">import</span> HttpUser, task, between<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorldUser</span>(<span class="hljs-title class_ inherited__">HttpUser</span>):<br>    host = <span class="hljs-string">&#x27;http://120.46.177.228&#x27;</span><br>    wait_time = between(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br><br><span class="hljs-meta">    @task</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">webhook</span>(<span class="hljs-params">self</span>):<br>        self.client.post(<span class="hljs-string">&#x27;/webhook1&#x27;</span>)<br></code></pre></td></tr></table></figure>
 </li>
 <li><p>终端运行</p>
-<ol>
-<li><pre><code class="Shell">locust
-
-# 启动多个节点
-什么是分布式负载生成?
-Locust支持跨多个进程和机器运行负载测试,以产生更高水平的负载。
-这是通过运行一个Locust实例在主节点模式,以及一个或多个实例在工作节点模式来实现的。
-主节点运行Web UI并协调工作节点,而工作节点运行实际的用户模拟。
-在单台机器上运行
-要在单台机器上以分布式方式运行Locust,可以使用--processes标志启动主节点和多个工作节点进程。
-例如: locust --processes 4 将启动1个主节点和4个工作节点进程。
-您也可以使用 --processes -1 自动检测逻辑核心数并为每个核心启动一个工作节点。
-在多台机器上运行
-在一台机器上以locust --master启动主节点实例。
-然后在每台工作节点机器上运行locust --worker --master-host &lt;主节点主机&gt;。
-您也可以使用locust-swarm工具来自动化分布式设置并处理防火墙/网络访问问题。
-分布式选项
---master-host: 设置主节点的主机名/IP(默认为localhost)。
---master-port: 设置主节点的端口号(默认为5557)。
---master-bind-host: 确定主节点将绑定的网络接口(默认为全部)。
---master-bind-port: 确定主节点将监听的网络端口(默认为5557)。
---expect-workers: 与--headless模式一起使用,等待指定数量的工作节点连接后再开始测试。
-跨节点通信
-您可以使用内置的事件钩子实现主节点和工作节点之间的自定义消息传递。
-这允许在分布式设置中协调测试设置和其他功能。
-提高Locust性能
-如果您正在运行大规模测试,请考虑使用更快的FastHttpUser而不是默认的HttpUser。
-这可以大大提高Locust的性能。
-</code></pre>
-</li>
-</ol>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">locust<br><br><span class="hljs-comment"># 启动多个节点</span><br>什么是分布式负载生成?<br>Locust支持跨多个进程和机器运行负载测试,以产生更高水平的负载。<br>这是通过运行一个Locust实例在主节点模式,以及一个或多个实例在工作节点模式来实现的。<br>主节点运行Web UI并协调工作节点,而工作节点运行实际的用户模拟。<br>在单台机器上运行<br>要在单台机器上以分布式方式运行Locust,可以使用<span class="hljs-params">--processes</span>标志启动主节点和多个工作节点进程。<br>例如: locust <span class="hljs-params">--processes</span> 4 将启动1个主节点和4个工作节点进程。<br>您也可以使用 <span class="hljs-params">--processes</span> -1 自动检测逻辑核心数并为每个核心启动一个工作节点。<br>在多台机器上运行<br>在一台机器上以locust <span class="hljs-params">--master</span>启动主节点实例。<br>然后在每台工作节点机器上运行locust <span class="hljs-params">--worker</span> <span class="hljs-params">--master-host</span> &lt;主节点主机&gt;。<br>您也可以使用locust-swarm工具来自动化分布式设置并处理防火墙/网络访问问题。<br>分布式选项<br><span class="hljs-params">--master-host</span>: 设置主节点的主机名<span class="hljs-string">/IP</span><span class="hljs-params">(默认为localhost)</span>。<br><span class="hljs-params">--master-port</span>: 设置主节点的端口号<span class="hljs-params">(默认为5557)</span>。<br><span class="hljs-params">--master-bind-host</span>: 确定主节点将绑定的网络接口<span class="hljs-params">(默认为全部)</span>。<br><span class="hljs-params">--master-bind-port</span>: 确定主节点将监听的网络端口<span class="hljs-params">(默认为5557)</span>。<br><span class="hljs-params">--expect-workers</span>: 与<span class="hljs-params">--headless</span>模式一起使用,等待指定数量的工作节点连接后再开始测试。<br>跨节点通信<br>您可以使用内置的事件钩子实现主节点和工作节点之间的自定义消息传递。<br>这允许在分布式设置中协调测试设置和其他功能。<br>提高Locust性能<br>如果您正在运行大规模测试,请考虑使用更快的FastHttpUser而不是默认的HttpUser。<br>这可以大大提高Locust的性能。<br></code></pre></td></tr></table></figure>
 </li>
 <li><p>访问 <a target="_blank" rel="noopener" href="http://localhost:8089/">http://localhost:8089/</a> </p>
 <ol>
