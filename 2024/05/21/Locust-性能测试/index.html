@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://example.com/imgs/image.png">
 <meta property="og:image" content="http://example.com/imgs/image-1716222963213.png">
 <meta property="article:published_time" content="2024-05-20T16:35:46.000Z">
-<meta property="article:modified_time" content="2024-05-20T16:48:39.516Z">
+<meta property="article:modified_time" content="2024-05-20T16:52:11.516Z">
 <meta property="article:author" content="hcguagua">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/imgs/image.png">
@@ -342,20 +342,22 @@
 </li>
 </ol>
 <h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a><strong>基本使用</strong></h3><ol>
-<li>安装：直接 pip 安装就行<ol>
-<li><pre><code class="Shell">pip3 install locust
+<li><p>安装：直接 pip 安装就行</p>
+<ol>
+<li><pre><code class="hljs">pip3 install locust
 
 # 查看版本
 locust -V
 
 # 输出类似下面的内容就代表安装成功了！！！
 locust 2.27.0 from /usr/local/lib/python3.10/site-packages/locust (python 3.10.6)
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-number">2.</span> 案例模版（需要新建 名为 locustfile.py  的文件）<br>   <span class="hljs-number">1.</span> ```python<br>      <span class="hljs-keyword">from</span> locust <span class="hljs-keyword">import</span> HttpUser, task, between<br>      <br>      <br>      <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorldUser</span>(<span class="hljs-title class_ inherited__">HttpUser</span>):<br>          host = <span class="hljs-string">&#x27;http://120.46.177.228&#x27;</span><br>          wait_time = between(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>      <br><span class="hljs-meta">          @task</span><br>          <span class="hljs-keyword">def</span> <span class="hljs-title function_">webhook</span>(<span class="hljs-params">self</span>):<br>              self.client.post(<span class="hljs-string">&#x27;/webhook1&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><br>   <br><br><span class="hljs-number">2.</span> 案例模版（需要新建 名为 locustfile.py  的文件）<br><br>   <span class="hljs-number">1.</span> ```python<br>      <span class="hljs-keyword">from</span> locust <span class="hljs-keyword">import</span> HttpUser, task, between<br>      <br>      <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorldUser</span>(<span class="hljs-title class_ inherited__">HttpUser</span>):<br>          host = <span class="hljs-string">&#x27;http://120.46.177.228&#x27;</span><br>          wait_time = between(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>      <br><span class="hljs-meta">          @task</span><br>          <span class="hljs-keyword">def</span> <span class="hljs-title function_">webhook</span>(<span class="hljs-params">self</span>):<br>              self.client.post(<span class="hljs-string">&#x27;/webhook1&#x27;</span>)<br></code></pre></td></tr></table></figure>
 </code></pre>
 </li>
 </ol>
 </li>
-<li>终端运行<ol>
+<li><p>终端运行</p>
+<ol>
 <li><pre><code class="Shell">locust
 
 # 启动多个节点
@@ -387,7 +389,8 @@ Locust支持跨多个进程和机器运行负载测试,以产生更高水平的�
 </li>
 </ol>
 </li>
-<li>访问 <a target="_blank" rel="noopener" href="http://localhost:8089/">http://localhost:8089/</a> <ol>
+<li><p>访问 <a target="_blank" rel="noopener" href="http://localhost:8089/">http://localhost:8089/</a> </p>
+<ol>
 <li>Number of users (peak concurrency)  –&gt; 用户数量（高峰并发） </li>
 <li>Ramp up (users started&#x2F;second)  –&gt; 递增用户数量</li>
 <li>Host –&gt; 主机域名</li>
@@ -397,7 +400,8 @@ Locust支持跨多个进程和机器运行负载测试,以产生更高水平的�
 </li>
 </ol>
 </li>
-<li>相关页面 性能测试指标<ol>
+<li><p>相关页面 性能测试指标</p>
+<ol>
 <li>Statistics【表格数据】</li>
 <li>Charts【图表数据】<ol>
 <li>Total Requests per Secend<ol>
