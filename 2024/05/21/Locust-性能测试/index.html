@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://example.com/imgs/image.png">
 <meta property="og:image" content="http://example.com/imgs/image-1716222963213.png">
 <meta property="article:published_time" content="2024-05-20T16:35:46.000Z">
-<meta property="article:modified_time" content="2024-05-20T16:37:47.300Z">
+<meta property="article:modified_time" content="2024-05-20T16:48:39.516Z">
 <meta property="article:author" content="hcguagua">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/imgs/image.png">
@@ -307,7 +307,7 @@
 </ol>
 </li>
 </ol>
-<h3 id="Locust相关文档"><a href="#Locust相关文档" class="headerlink" title="Locust相关文档"></a><strong>Locust相关文档</strong></h3><p>github地址：<strong>locust</strong></p>
+<h3 id="Locust相关文档"><a href="#Locust相关文档" class="headerlink" title="Locust相关文档"></a><strong>Locust相关文档</strong></h3><p>github地址：<a target="_blank" rel="noopener" href="https://github.com/locustio/locust">https://github.com/locustio/locust</a></p>
 <p>官方文档地址：<a target="_blank" rel="noopener" href="https://docs.locust.io/">docs.locust.io</a></p>
 <h3 id="常见的上线策略"><a href="#常见的上线策略" class="headerlink" title="常见的上线策略"></a><strong>常见的上线策略</strong></h3><ol>
 <li>金丝雀发布(Canary Release):<ol>
@@ -350,7 +350,7 @@ locust -V
 
 # 输出类似下面的内容就代表安装成功了！！！
 locust 2.27.0 from /usr/local/lib/python3.10/site-packages/locust (python 3.10.6)
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-number">2.</span> 案例模版（需要新建 名为 locustfile.py  的文件）<br>   <span class="hljs-number">1.</span> ```Shell<br>      <span class="hljs-keyword">from</span> locust <span class="hljs-keyword">import</span> HttpUser, task, between<br>      <br>      <br>      <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorldUser</span>(<span class="hljs-title class_ inherited__">HttpUser</span>):<br>          host = <span class="hljs-string">&#x27;http://120.46.177.228&#x27;</span><br>          wait_time = between(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>      <br><span class="hljs-meta">          @task</span><br>          <span class="hljs-keyword">def</span> <span class="hljs-title function_">webhook</span>(<span class="hljs-params">self</span>):<br>              self.client.post(<span class="hljs-string">&#x27;/webhook1&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-number">2.</span> 案例模版（需要新建 名为 locustfile.py  的文件）<br>   <span class="hljs-number">1.</span> ```python<br>      <span class="hljs-keyword">from</span> locust <span class="hljs-keyword">import</span> HttpUser, task, between<br>      <br>      <br>      <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorldUser</span>(<span class="hljs-title class_ inherited__">HttpUser</span>):<br>          host = <span class="hljs-string">&#x27;http://120.46.177.228&#x27;</span><br>          wait_time = between(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>      <br><span class="hljs-meta">          @task</span><br>          <span class="hljs-keyword">def</span> <span class="hljs-title function_">webhook</span>(<span class="hljs-params">self</span>):<br>              self.client.post(<span class="hljs-string">&#x27;/webhook1&#x27;</span>)<br></code></pre></td></tr></table></figure>
 </code></pre>
 </li>
 </ol>
@@ -461,7 +461,58 @@ Locust支持跨多个进程和机器运行负载测试,以产生更高水平的�
 <li>系统资源（特别是 CPU 或内存）使用率达到 100%。</li>
 </ul>
 <h4 id="3-示例结果"><a href="#3-示例结果" class="headerlink" title="3. 示例结果"></a><strong>3. 示例结果</strong></h4><p>假设以下是你逐步增加并发用户数后的观察结果：</p>
-<p>并发用户数平均响应时间95th 响应时间RPS失败请求数CPU 使用率50800 ms1300 ms35050%70850 ms1350 ms40060%90900 ms1400 ms43275%1101500 ms2000 ms45590%1302500 ms3000 ms4015100%</p>
+<table>
+<thead>
+<tr>
+<th align="center">并发用户数</th>
+<th align="center">平均响应时间</th>
+<th align="center">95th 响应时间</th>
+<th align="center">RPS</th>
+<th align="center">失败请求数</th>
+<th align="center">CPU 使用率</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">50</td>
+<td align="center">800 ms</td>
+<td align="center">1300 ms</td>
+<td align="center">35</td>
+<td align="center">0</td>
+<td align="center">50%</td>
+</tr>
+<tr>
+<td align="center">70</td>
+<td align="center">850 ms</td>
+<td align="center">1350 ms</td>
+<td align="center">40</td>
+<td align="center">0</td>
+<td align="center">60%</td>
+</tr>
+<tr>
+<td align="center">90</td>
+<td align="center">900 ms</td>
+<td align="center">1400 ms</td>
+<td align="center">43</td>
+<td align="center">2</td>
+<td align="center">75%</td>
+</tr>
+<tr>
+<td align="center">110</td>
+<td align="center">1500 ms</td>
+<td align="center">2000 ms</td>
+<td align="center">45</td>
+<td align="center">5</td>
+<td align="center">90%</td>
+</tr>
+<tr>
+<td align="center">130</td>
+<td align="center">2500 ms</td>
+<td align="center">3000 ms</td>
+<td align="center">40</td>
+<td align="center">15</td>
+<td align="center">100%</td>
+</tr>
+</tbody></table>
 <p>在并发用户数达到 130 时，系统各项指标表明已达到瓶颈：</p>
 <ul>
 <li>平均响应时间显著增加到 2500 ms。</li>
