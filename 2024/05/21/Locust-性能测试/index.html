@@ -1,0 +1,809 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="hcguagua">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="主流性能测试工具对比 JMeter 优点:开源免费、易用性强、支持多种协议测试、可视化报告 缺点:性能测试能力较弱,对大并发和长时间测试支持不足   Locust 优点:开源免费、基于Python编写、易于编写复杂场景、分布式压测支持 缺点:仅支持HTTP&#x2F;WebSocket协议、编写压测脚本需要一定Python基础   Gatling 优点:性能优秀、支持多种协议、支持分布式压测、报告">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Locust 性能测试">
+<meta property="og:url" content="http://example.com/2024/05/21/Locust-%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:site_name" content="hcguagua Blog">
+<meta property="og:description" content="主流性能测试工具对比 JMeter 优点:开源免费、易用性强、支持多种协议测试、可视化报告 缺点:性能测试能力较弱,对大并发和长时间测试支持不足   Locust 优点:开源免费、基于Python编写、易于编写复杂场景、分布式压测支持 缺点:仅支持HTTP&#x2F;WebSocket协议、编写压测脚本需要一定Python基础   Gatling 优点:性能优秀、支持多种协议、支持分布式压测、报告">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/imgs/image.png">
+<meta property="og:image" content="http://example.com/imgs/image-1716222963213.png">
+<meta property="article:published_time" content="2024-05-20T16:35:46.000Z">
+<meta property="article:modified_time" content="2024-05-20T16:37:47.300Z">
+<meta property="article:author" content="hcguagua">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/imgs/image.png">
+  
+  
+  
+  <title>Locust 性能测试 - hcguagua Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Locust 性能测试"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-21 00:35" pubdate>
+          2024年5月21日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Locust 性能测试</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="主流性能测试工具对比"><a href="#主流性能测试工具对比" class="headerlink" title="主流性能测试工具对比"></a><strong>主流性能测试工具对比</strong></h3><ol>
+<li>JMeter<ol>
+<li>优点:开源免费、易用性强、支持多种协议测试、可视化报告</li>
+<li>缺点:性能测试能力较弱,对大并发和长时间测试支持不足</li>
+</ol>
+</li>
+<li>Locust<ol>
+<li>优点:开源免费、基于Python编写、易于编写复杂场景、分布式压测支持</li>
+<li>缺点:仅支持HTTP&#x2F;WebSocket协议、编写压测脚本需要一定Python基础</li>
+</ol>
+</li>
+<li>Gatling<ol>
+<li>优点:性能优秀、支持多种协议、支持分布式压测、报告详细</li>
+<li>缺点:学习曲线较steep、需要一定Scala编程能力</li>
+</ol>
+</li>
+<li>Loadrunner<ol>
+<li>优点:功能全面、支持多种协议、报告丰富、专业性强</li>
+<li>缺点:需要付费授权、使用复杂度高、对测试人员技能要求高</li>
+</ol>
+</li>
+<li>Siege<ol>
+<li>优点:开源免费、易于上手、针对HTTP&#x2F;HTTPS协议优化良好</li>
+<li>缺点:功能较为简单、不支持分布式压测、报告信息较少</li>
+</ol>
+</li>
+<li>Artillery<ol>
+<li>优点:开源免费、易于上手、支持多种协议、可定制化程度高</li>
+<li>缺点:性能相对较弱、报告信息较少、社区活跃度不高</li>
+</ol>
+</li>
+</ol>
+<h3 id="Locust相关文档"><a href="#Locust相关文档" class="headerlink" title="Locust相关文档"></a><strong>Locust相关文档</strong></h3><p>github地址：<strong>locust</strong></p>
+<p>官方文档地址：<a target="_blank" rel="noopener" href="https://docs.locust.io/">docs.locust.io</a></p>
+<h3 id="常见的上线策略"><a href="#常见的上线策略" class="headerlink" title="常见的上线策略"></a><strong>常见的上线策略</strong></h3><ol>
+<li>金丝雀发布(Canary Release):<ol>
+<li>将新版本先部署给少量代表性用户(金丝雀用户组),监控使用情况。</li>
+<li>确认无重大问题后,逐步扩大新版本的发布范围。</li>
+</ol>
+</li>
+<li>蓝绿部署(Blue-Green Deployment):<ol>
+<li>在生产环境中维护两套完全相同的环境(蓝色和绿色)。</li>
+<li>新版本先部署到其中一个环境,测试无误后切换流量。</li>
+</ol>
+</li>
+<li>灰度发布(Gradual Rollout):<ol>
+<li>将新版本逐步推广到用户群中,如先发布给少部分用户。</li>
+<li>监控反馈情况,确认无重大问题后再扩大发布范围。</li>
+</ol>
+</li>
+<li>A&#x2F;B测试(A&#x2F;B Testing):<ol>
+<li>将用户分成A&#x2F;B两组,A组使用旧版本,B组使用新版本。</li>
+<li>对比两组用户行为数据,评估新功能的影响。</li>
+</ol>
+</li>
+<li>功能开关(Feature Flags):<ol>
+<li>将新功能与主干代码解耦,可以控制新功能在生产环境的开启时机。</li>
+<li>方便快速回滚和测试新功能。</li>
+</ol>
+</li>
+<li>分阶段推广(Incremental Rollout):<ol>
+<li>将新版本分阶段推广到用户群中,先让少部分用户试用。</li>
+<li>观察反馈情况,确认无重大问题后再逐步扩大范围。</li>
+</ol>
+</li>
+</ol>
+<h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a><strong>基本使用</strong></h3><ol>
+<li>安装：直接 pip 安装就行<ol>
+<li><pre><code class="Shell">pip3 install locust
+
+# 查看版本
+locust -V
+
+# 输出类似下面的内容就代表安装成功了！！！
+locust 2.27.0 from /usr/local/lib/python3.10/site-packages/locust (python 3.10.6)
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-number">2.</span> 案例模版（需要新建 名为 locustfile.py  的文件）<br>   <span class="hljs-number">1.</span> ```Shell<br>      <span class="hljs-keyword">from</span> locust <span class="hljs-keyword">import</span> HttpUser, task, between<br>      <br>      <br>      <span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorldUser</span>(<span class="hljs-title class_ inherited__">HttpUser</span>):<br>          host = <span class="hljs-string">&#x27;http://120.46.177.228&#x27;</span><br>          wait_time = between(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br>      <br><span class="hljs-meta">          @task</span><br>          <span class="hljs-keyword">def</span> <span class="hljs-title function_">webhook</span>(<span class="hljs-params">self</span>):<br>              self.client.post(<span class="hljs-string">&#x27;/webhook1&#x27;</span>)<br></code></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ol>
+</li>
+<li>终端运行<ol>
+<li><pre><code class="Shell">locust
+
+# 启动多个节点
+什么是分布式负载生成?
+Locust支持跨多个进程和机器运行负载测试,以产生更高水平的负载。
+这是通过运行一个Locust实例在主节点模式,以及一个或多个实例在工作节点模式来实现的。
+主节点运行Web UI并协调工作节点,而工作节点运行实际的用户模拟。
+在单台机器上运行
+要在单台机器上以分布式方式运行Locust,可以使用--processes标志启动主节点和多个工作节点进程。
+例如: locust --processes 4 将启动1个主节点和4个工作节点进程。
+您也可以使用 --processes -1 自动检测逻辑核心数并为每个核心启动一个工作节点。
+在多台机器上运行
+在一台机器上以locust --master启动主节点实例。
+然后在每台工作节点机器上运行locust --worker --master-host &lt;主节点主机&gt;。
+您也可以使用locust-swarm工具来自动化分布式设置并处理防火墙/网络访问问题。
+分布式选项
+--master-host: 设置主节点的主机名/IP(默认为localhost)。
+--master-port: 设置主节点的端口号(默认为5557)。
+--master-bind-host: 确定主节点将绑定的网络接口(默认为全部)。
+--master-bind-port: 确定主节点将监听的网络端口(默认为5557)。
+--expect-workers: 与--headless模式一起使用,等待指定数量的工作节点连接后再开始测试。
+跨节点通信
+您可以使用内置的事件钩子实现主节点和工作节点之间的自定义消息传递。
+这允许在分布式设置中协调测试设置和其他功能。
+提高Locust性能
+如果您正在运行大规模测试,请考虑使用更快的FastHttpUser而不是默认的HttpUser。
+这可以大大提高Locust的性能。
+</code></pre>
+</li>
+</ol>
+</li>
+<li>访问 <a target="_blank" rel="noopener" href="http://localhost:8089/">http://localhost:8089/</a> <ol>
+<li>Number of users (peak concurrency)  –&gt; 用户数量（高峰并发） </li>
+<li>Ramp up (users started&#x2F;second)  –&gt; 递增用户数量</li>
+<li>Host –&gt; 主机域名</li>
+<li>Advanced options –&gt; 可选项<ol>
+<li>Run time –&gt; 运行时间</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>相关页面 性能测试指标<ol>
+<li>Statistics【表格数据】</li>
+<li>Charts【图表数据】<ol>
+<li>Total Requests per Secend<ol>
+<li>RPS</li>
+<li>Failures&#x2F;s</li>
+</ol>
+</li>
+<li>Response Times(ms)<ol>
+<li>95th Percentile</li>
+<li>Average Response Time</li>
+</ol>
+</li>
+<li>Number of Users</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="指标说明"><a href="#指标说明" class="headerlink" title="指标说明"></a><strong>指标说明</strong></h3><p><img src="/../imgs/image.png" srcset="/img/loading.gif" lazyload alt="img"><img src="/../imgs/image-1716222963213.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="Statistics页面部分"><a href="#Statistics页面部分" class="headerlink" title="Statistics页面部分"></a><strong>Statistics页面部分</strong></h4><ol>
+<li>Type：请求方式</li>
+<li>Name：接口路由</li>
+<li>Requests：请求数量</li>
+<li>Fails：请求失败的数量</li>
+<li>Median：响应时间中位数</li>
+<li>95%ile(ms)：95% 响应时间。表示 95% 的请求在这个时间内完成。</li>
+<li>99%ile(ms)：99% 响应时间。表示 99% 的请求在这个时间内完成。</li>
+<li>Average(ms)：平均响应时间</li>
+<li>Min(ms)：最小响应时间</li>
+<li>Max(ms)：最大响应时间</li>
+<li>Average size (bytes)：每个请求的平均响应数据大小,单位为字节。</li>
+<li>Current RPS：当前的每秒请求数。</li>
+<li>Current Failures&#x2F;s：每秒钟发生的失败请求数量。</li>
+</ol>
+<h4 id="Charts页面部分"><a href="#Charts页面部分" class="headerlink" title="Charts页面部分"></a><strong>Charts页面部分</strong></h4><ol>
+<li>RPS (Requests per Second)：每秒请求数。表示每秒发送的请求数量。这个指标用来衡量系统的吞吐量。</li>
+<li>Failures&#x2F;s：每秒失败数。表示每秒发生的失败请求数量。这帮助用户了解失败请求的频率。</li>
+<li>95th Percentile：95 百分位数。表示响应时间分布中,有95%的响应时间小于等于这个值。它反映了系统在高负载下的响应性能。</li>
+<li>Average Response Time：平均响应时间。所有请求的平均响应时间。这个指标反映了系统的总体响应性能。</li>
+<li>Number of Users：用户数。当前运行的虚拟用户数，代表正在模拟的并发用户数量。</li>
+</ol>
+<h3 id="发现性能瓶颈简略步骤"><a href="#发现性能瓶颈简略步骤" class="headerlink" title="发现性能瓶颈简略步骤"></a><strong>发现性能瓶颈简略步骤</strong></h3><p>以下现象表示 服务器系统处理请求的效率下降。</p>
+<ul>
+<li>RPS 不再增加，甚至有所下降，表明系统已经无法处理更多的请求。</li>
+<li>失败请求数增加，表明部分请求由于系统资源不足而无法成功处理。</li>
+<li>系统资源（特别是 CPU）使用率达到 100%，表明系统资源已被完全占用。</li>
+</ul>
+<h4 id="1-逐步增加并发用户数"><a href="#1-逐步增加并发用户数" class="headerlink" title="1. 逐步增加并发用户数"></a><strong>1. 逐步增加并发用户数</strong></h4><p>每次增加 20 个并发用户，例如从 50 增加到 70，再到 90 等等。每次增加后，观察并记录以下指标：</p>
+<ul>
+<li>平均响应时间</li>
+<li>95th 百分位响应时间</li>
+<li>RPS</li>
+<li>失败请求数</li>
+<li>系统资源使用率（可以通过系统监控工具如 <code>htop</code>、<code>top</code> 或 <code>vmstat</code> 进行监控）</li>
+</ul>
+<h4 id="2-找到系统极限"><a href="#2-找到系统极限" class="headerlink" title="2. 找到系统极限"></a><strong>2. 找到系统极限</strong></h4><p>继续增加并发用户数，直到发现以下情况之一：</p>
+<ul>
+<li>响应时间显著增加（例如从 800ms 增加到 2500ms）。</li>
+<li>RPS 不再增加或下降（例如从 45 RPS 降到 40 RPS）。</li>
+<li>失败请求数显著增加（例如从 0 增加到 15）。</li>
+<li>系统资源（特别是 CPU 或内存）使用率达到 100%。</li>
+</ul>
+<h4 id="3-示例结果"><a href="#3-示例结果" class="headerlink" title="3. 示例结果"></a><strong>3. 示例结果</strong></h4><p>假设以下是你逐步增加并发用户数后的观察结果：</p>
+<p>并发用户数平均响应时间95th 响应时间RPS失败请求数CPU 使用率50800 ms1300 ms35050%70850 ms1350 ms40060%90900 ms1400 ms43275%1101500 ms2000 ms45590%1302500 ms3000 ms4015100%</p>
+<p>在并发用户数达到 130 时，系统各项指标表明已达到瓶颈：</p>
+<ul>
+<li>平均响应时间显著增加到 2500 ms。</li>
+<li>RPS 不再增加，甚至有所下降到 40。</li>
+<li>失败请求数显著增加到 15。</li>
+<li>CPU 使用率达到 100%。</li>
+</ul>
+<h4 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a><strong>4. 总结</strong></h4><p>在这个示例中，系统的并发瓶颈大约在 130 并发用户左右。当并发用户数超过 130 时，系统的响应时间显著增加，RPS 不再增加，并且失败请求数显著增加，同时 CPU 使用率达到了 100%。</p>
+<p>通过这些步骤和分析，你可以确定系统的性能瓶颈和最大支持的并发用户数，并进行相应的优化和调整。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Locust 性能测试</div>
+      <div>http://example.com/2024/05/21/Locust-性能测试/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>hcguagua</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年5月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/05/09/%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95/" title="基础算法">
+                        <span class="hidden-mobile">基础算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
